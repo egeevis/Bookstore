@@ -48,6 +48,6 @@ else
     {
         // Değişen bilgileri API'ye PUT metoduyla gönderiyoruz
         await Http.PutAsJsonAsync("api/Books", editBook);
-        NavManager.NavigateTo("/books"); // İşlem bitince listeye dön
+        NavManager.NavigateTo("books"); // İşlem bitince listeye dön
     }
 }
