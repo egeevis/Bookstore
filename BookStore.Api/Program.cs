@@ -1,26 +1,31 @@
 using BookStore.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
+// BookStore.Api -> Program.cs
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Buraya CORS politikasýný ekle
+// 1. CORS PolitikasÄ±nÄ± TanÄ±mla
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowGitHub",
         policy =>
         {
-            policy.WithOrigins("https://egeevis.github.io") // GitHub Pages adresin
+            policy.WithOrigins("https://egeevis.github.io") // Sadece domain adÄ±
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
 });
 
 builder.Services.AddControllers();
-// ... diðer servislerin
+
+// VeritabanÄ± baÄŸlantÄ±nÄ± da buraya eklemeyi unutma
+builder.Services.AddDbContext<BookContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// 2. Bunu mutlaka UseHttpsRedirection ve UseAuthorization arasýna ekle
+// 2. CORS'u AktifleÅŸtir (BurasÄ± Ã‡ok Kritik: SÄ±ralama Ã–nemli!)
+// UseHttpsRedirection ve UseAuthorization'dan HEMEN Ã–NCE olmalÄ±
 app.UseCors("AllowGitHub");
 
 app.UseHttpsRedirection();
@@ -36,7 +41,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DÜZELTME: Veritabaný servisini buraya, Build iþleminden ÖNCEYE aldýk.
+// DÃœZELTME: VeritabanÃ½ servisini buraya, Build iÃ¾leminden Ã–NCEYE aldÃ½k.
 builder.Services.AddDbContext<BookStoreContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -49,7 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// 2. Tanýmladýðýmýz politikayý devreye sok
+// 2. TanÃ½mladÃ½Ã°Ã½mÃ½z politikayÃ½ devreye sok
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
