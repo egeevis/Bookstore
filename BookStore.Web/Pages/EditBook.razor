@@ -1,0 +1,53 @@
+﻿@page "/edit-book/{id:int}"
+@using BookStore.Web.Entities
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Kitabı Düzenle</h3>
+
+@if (editBook == null)
+{
+    <p>Yükleniyor...</p>
+}
+else
+{
+    <div class="mb-3">
+        <label>Kitap Adı</label>
+        <input class="form-control" @bind="editBook.Title" />
+    </div>
+
+    <div class="mb-3">
+        <label>Yazar</label>
+        <input class="form-control" @bind="editBook.Author" />
+    </div>
+
+    <div class="mb-3">
+        <label>Fiyat</label>
+        <input type="number" class="form-control" @bind="editBook.Price" />
+    </div>
+
+    <div class="mb-3">
+        <label>Stok Adedi</label>
+        <input type="number" class="form-control" @bind="editBook.StockQty" />
+    </div>
+
+    <button class="btn btn-warning" @onclick="UpdateBook">Değişiklikleri Kaydet</button>
+}
+
+@code {
+    [Parameter] public int Id { get; set; } // Adresten gelen ID'yi yakalar
+    private Book? editBook;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Sayfa açıldığında mevcut kitap bilgilerini API'den çekiyoruz
+        editBook = await Http.GetFromJsonAsync<Book>($"api/Books/{Id}");
+    }
+
+    private async Task UpdateBook()
+    {
+        // Değişen bilgileri API'ye PUT metoduyla gönderiyoruz
+        await Http.PutAsJsonAsync("api/Books", editBook);
+        NavManager.NavigateTo("/books"); // İşlem bitince listeye dön
+    }
+}

@@ -1,0 +1,42 @@
+﻿@page "/add-book"
+@using BookStore.Web.Entities
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Yeni Kitap Ekle</h3>
+
+<div class="mb-3">
+    <label>Kitap Adı</label>
+    <input class="form-control" @bind="newBook.Title" />
+</div>
+
+<div class="mb-3">
+    <label>Yazar</label>
+    <input class="form-control" @bind="newBook.Author" />
+</div>
+
+<div class="mb-3">
+    <label>Fiyat</label>
+    <input type="number" class="form-control" @bind="newBook.Price" />
+</div>
+
+<div class="mb-3">
+    <label>Stok Adedi</label>
+    <input type="number" class="form-control" @bind="newBook.StockQty" />
+</div>
+
+<button class="btn btn-success" @onclick="SaveBook">Kitabı Kaydet</button>
+
+
+@code {
+    private Book newBook = new Book();
+
+    private async Task SaveBook()
+    {
+        // 1. API'ye POST isteği at (HttpClient'ı yani Http'yi kullan)
+        await Http.PostAsJsonAsync("api/Books", newBook);
+
+        // 2. İşlem bitince kullanıcıyı /books sayfasına yönlendir
+        NavManager.NavigateTo("/books");
+    }
+}

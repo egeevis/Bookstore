@@ -1,0 +1,71 @@
+﻿@page "/books"
+@using BookStore.Web.Entities
+@using System.Net.Http.Json
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<h3>Kitap Listesi</h3>
+
+@if (books == null)
+{
+    <p><em>Veriler yükleniyor, lütfen bekleyin...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Başlık</th>
+                <th>Yazar</th>
+                <th>Fiyat</th>
+                <th>Stok</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in books)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Price TL</td>
+                    <td>@book.StockQty</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteBook(book.Id)">
+                            Sil
+                        </button>
+                        <button class="btn btn-info btn-sm" @onclick='() => NavManager.NavigateTo($"/edit-book/{book.Id}")'>
+                            Düzenle
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Book>? books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Az önce öğrendiğimiz o sihirli satırı buraya yazdık:
+        books = await Http.GetFromJsonAsync<List<Book>>("api/Books");
+    }
+    private async Task LoadBooks()
+    {
+        books = await Http.GetFromJsonAsync<List<Book>>("api/Books") ?? new List<Book>();
+    }
+
+    private async Task DeleteBook(int id)
+    {
+        // 1. API'ye silme isteği gönder (api/Books/5 gibi)
+        var response = await Http.DeleteAsync($"api/Books/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // 2. Silme başarılıysa listeyi sayfada yenile
+            await LoadBooks();
+        }
+    }
+}
