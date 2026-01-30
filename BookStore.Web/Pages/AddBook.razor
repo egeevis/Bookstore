@@ -34,9 +34,9 @@
     private async Task SaveBook()
     {
         // 1. API'ye POST isteği at (HttpClient'ı yani Http'yi kullan)
-        await Http.PostAsJsonAsync("api/Books", newBook);
+        await Http.PostAsJsonAsync("Bookstore/api/Books", newBook);
 
         // 2. İşlem bitince kullanıcıyı /books sayfasına yönlendir
-        NavManager.NavigateTo("books");
+        NavManager.NavigateTo("Bookstore/books");
     }
 }
