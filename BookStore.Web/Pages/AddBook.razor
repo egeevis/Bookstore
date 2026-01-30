@@ -33,10 +33,13 @@
 
     private async Task SaveBook()
     {
-        // 1. API'ye POST isteği at (HttpClient'ı yani Http'yi kullan)
-        await Http.PostAsJsonAsync("/Bookstore/api/Books", newBook);
+        // 1. API İsteği: Başındaki "/" işaretini SİLDİK
+        // Program.cs'deki BaseAddress ile birleşeceği için tertemiz "api/Books" kalmalı
+        await Http.PostAsJsonAsync("api/Books", newBook);
 
-        // 2. İşlem bitince kullanıcıyı /books sayfasına yönlendir
-        NavManager.NavigateTo("/Bookstore/books");
+        // 2. Yönlendirme: Başındaki "/" işaretini SİLDİK
+        // index.html'deki <base href="/Bookstore/" /> sayesinde seni otomatik olarak 
+        // egeevis.github.io/Bookstore/books adresine götürecek.
+        NavManager.NavigateTo("books"); 
     }
 }
