@@ -47,7 +47,7 @@ else
     private async Task UpdateBook()
     {
         // Değişen bilgileri API'ye PUT metoduyla gönderiyoruz
-        await Http.PutAsJsonAsync("api/Books", editBook);
-        NavManager.NavigateTo("books"); // İşlem bitince listeye dön
+        await Http.PutAsJsonAsync("Bookstore/api/Books", editBook);
+        NavManager.NavigateTo("/Bookstore/books"); // İşlem bitince listeye dön
     }
 }
