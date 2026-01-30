@@ -8,6 +8,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7261/") // API'nin çalýþtýðý ana adres
+    BaseAddress = new Uri("https://bookstore-dt0c.onrender.com/")
 });
 await builder.Build().RunAsync();
