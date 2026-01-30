@@ -3,16 +3,31 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CORS servisini ekle (Ýzin politikasýný tanýmla)
+// 1. Buraya CORS politikasýný ekle
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()  // Kim gelirse gelsin (Blazor, Mobil, vs.)
-              .AllowAnyMethod()  // GET, POST, DELETE hepsi serbest
-              .AllowAnyHeader(); // Her türlü baþlýk kabul
-    });
+    options.AddPolicy("AllowGitHub",
+        policy =>
+        {
+            policy.WithOrigins("https://egeevis.github.io") // GitHub Pages adresin
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
 });
+
+builder.Services.AddControllers();
+// ... diðer servislerin
+
+var app = builder.Build();
+
+// 2. Bunu mutlaka UseHttpsRedirection ve UseAuthorization arasýna ekle
+app.UseCors("AllowGitHub");
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
 
 // Add services to the container.
 
