@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "BookStore.Web",
   "resources": {
-    "hash": "sha256-Jt96wBV/iWG5uFaGRGEGoR3F7F5Q+tFF9eiGJBTWRS0=",
+    "hash": "sha256-cJO+3ZzFgA8CrthSUkWjhDyjFjKZ2M/5Tt5w/UC6deA=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-NljIbpK/1KCj0+knpX8U77Rbl5kTtfFIuFjK7AuczEw="
     },
@@ -18,7 +18,7 @@
     },
     "coreAssembly": {},
     "assembly": {
-      "BookStore.Web.wasm": "sha256-cld7WVMSNqmCoFqrCX9PtzdnWvyyWYhylfyykJq2PHA=",
+      "BookStore.Web.wasm": "sha256-ae//IGHu1rYCUnuVlIsKMMwBVVNlZ3USqUACJTvAXhw=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-7XxeRJ0U0bsQt2JjEQAIhDTlk8+iDA3T7Df785T+uUg=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-pvmAHfZAY9Hyt6vlzSfKoDVjZdUqJboIfi2/RfZbogc=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-USZwWZkhotwEqRgGVy7AJpcY3nID5gb2sRYt5GINnUk=",
