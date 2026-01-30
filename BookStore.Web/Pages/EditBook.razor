@@ -35,19 +35,30 @@ else
 }
 
 @code {
-    [Parameter] public int Id { get; set; } // Adresten gelen ID'yi yakalar
+    [Parameter] public int Id { get; set; } 
     private Book? editBook;
 
     protected override async Task OnInitializedAsync()
     {
-        // Sayfa açıldığında mevcut kitap bilgilerini API'den çekiyoruz
+        // OnInitializedAsync'de api/Books/{Id} kullanarak kitabı çekiyoruz (Bu kısım doğru)
         editBook = await Http.GetFromJsonAsync<Book>($"api/Books/{Id}");
     }
 
     private async Task UpdateBook()
     {
-        // Değişen bilgileri API'ye PUT metoduyla gönderiyoruz
-        await Http.PutAsJsonAsync("Bookstore/api/Books", editBook);
-        NavManager.NavigateTo("/Bookstore/books"); // İşlem bitince listeye dön
+        if (editBook != null)
+        {
+            // 1. DÜZELTME: URL'den /Bookstore/ kısmını ve baştaki / işaretini siliyoruz.
+            // API'ye gönderirken adresi Controller'ın beklediği gibi yapmalıyız. 
+            // Genelde PUT istekleri api/Books/{id} şeklindedir:
+            var response = await Http.PutAsJsonAsync($"api/Books/{Id}", editBook);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // 2. DÜZELTME: Yönlendirmede /Bookstore/ ve baştaki / işaretini siliyoruz.
+                // base href="/Bookstore/" ayarın sayesinde bu seni doğru yere götürür.
+                NavManager.NavigateTo("books"); 
+            }
+        }
     }
 }
