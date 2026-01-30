@@ -3,45 +3,29 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Buraya CORS politikasýný ekle
+// 1. Veritabaný Servisi (Mutlaka builder.Build'dan ÖNCE olmalý)
+builder.Services.AddDbContext<BookStoreContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 2. CORS Politikasý (Ýsmini tek ve net yapalým)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowGitHub",
+    options.AddPolicy("AllowApp",
         policy =>
         {
-            policy.WithOrigins("https://egeevis.github.io") // GitHub Pages adresin
+            policy.WithOrigins("https://egeevis.github.io")
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
 });
 
 builder.Services.AddControllers();
-// ... diðer servislerin
-
-var app = builder.Build();
-
-// 2. Bunu mutlaka UseHttpsRedirection ve UseAuthorization arasýna ekle
-app.UseCors("AllowGitHub");
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DÜZELTME: Veritabaný servisini buraya, Build iþleminden ÖNCEYE aldýk.
-builder.Services.AddDbContext<BookStoreContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var app = builder.Build(); // TÜM SERVÝS TANIMLARI BURADA BÝTER
 
-
-// Configure the HTTP request pipeline.
+// 3. Middleware Pipeline (Sýralama Önemli!)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -49,11 +33,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// 2. Tanýmladýðýmýz politikayý devreye sok
-app.UseCors("AllowAll");
+
+// CORS, Routing ve Authorization arasýna girmeli
+app.UseRouting();
+app.UseCors("AllowApp");
 
 app.UseAuthorization();
-
 app.MapControllers();
 
-app.Run();
+app.Run(); // DOSYADA SADECE BÝR TANE app.Run() OLMALI
